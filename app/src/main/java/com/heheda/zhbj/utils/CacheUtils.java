@@ -22,12 +22,11 @@ public class CacheUtils {
     }
 
 
-    public static void SaveStartMain(Context ctx, String key) {
+    public static void SaveSharedPreference(Context ctx, String key ,Boolean values) {
 
         SharedPreferences sp = ctx.getSharedPreferences("zhbj", Context.MODE_PRIVATE);
 
-
-        sp.edit().putBoolean(key, true).commit();
+        sp.edit().putBoolean(key, values).commit();
 
     }
 

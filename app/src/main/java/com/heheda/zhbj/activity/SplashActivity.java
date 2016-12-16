@@ -69,26 +69,26 @@ public class SplashActivity extends Activity {
 
 
                 Boolean startMain= CacheUtils.getIsfristStartMain(SplashActivity.this, START_MAIN);
-
+                Intent intent;
 
                 if (startMain) {
 
-                    Intent intent =new Intent(SplashActivity.this,MainActivity.class);
+                    intent=new Intent(SplashActivity.this,MainActivity.class);
 
-                    startActivity(intent);
+
 
 
                 } else {
                     //开启引导界面
-                    Intent intent =new Intent(SplashActivity.this,GuideActivity.class);
+                 intent =new Intent(SplashActivity.this,GuideActivity.class);
 
-                    startActivity(intent);
-                    CacheUtils.SaveStartMain(SplashActivity.this,START_MAIN);
+
+                   // CacheUtils.SaveStartMain(SplashActivity.this,START_MAIN);
 
                 }
 
                 // Toast.makeText(SplashActivity.this,"hehda",Toast.LENGTH_SHORT).show();
-
+                startActivity(intent);
                 finish();
 
             }
