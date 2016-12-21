@@ -1,13 +1,21 @@
 package com.heheda.zhbj.activity;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 
 import com.heheda.zhbj.R;
+import com.heheda.zhbj.fragment.ContentFragment;
+import com.heheda.zhbj.fragment.LeftMenuFragment;
 import com.heheda.zhbj.utils.DensityUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class MainActivity extends SlidingFragmentActivity {
+
+    public static final String MAIN_CONTENT_TAG = "main_content_tag";
+
+    public static final String leftmenu_tag="leftmenu_tag";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,5 +42,22 @@ public class MainActivity extends SlidingFragmentActivity {
         //设置主页占据的宽度
 
         slidingMenu.setBehindOffset(DensityUtils.dip2px(this,200));
+
+        initFragment();
+
+    }
+
+    private void initFragment() {
+
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+
+        FragmentTransaction ft = fm.beginTransaction(); //开启事务
+
+        ft.replace(R.id.activity_main,new ContentFragment(), MAIN_CONTENT_TAG);
+        ft.replace(R.id.leftmenu_fragment,new LeftMenuFragment(), leftmenu_tag);
+
+
+        ft.commit();
+
     }
 }

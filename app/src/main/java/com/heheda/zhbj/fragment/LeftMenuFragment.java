@@ -1,5 +1,6 @@
 package com.heheda.zhbj.fragment;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,7 +17,11 @@ public class LeftMenuFragment extends BaseFragment {
     @Override
     public  View initView() {
 
+        tv=new TextView(ctx);
 
+        tv.setTextColor(Color.RED);
+
+        tv.setTextSize(20);
 
 
 
@@ -28,5 +33,6 @@ public class LeftMenuFragment extends BaseFragment {
     public void initData() {
         super.initData();
 
+        tv.setText("我是菜单");
     }
 }
