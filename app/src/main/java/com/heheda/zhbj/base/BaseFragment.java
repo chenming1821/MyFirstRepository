@@ -31,7 +31,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * 初始化一个view ，让子类实习此方法 达到特有的效果
+     * 初始化一个view ，让子类实现此方法 达到特有的效果
      * @return
      */
     public abstract View initView();
@@ -50,7 +50,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * 1.如果自页面没有数据，联网请求数据，并且绑定到initView初始化的视图上
+     * 1.如果子页面没有数据，联网请求数据，并且绑定到initView初始化的视图上
      * 2.绑定到initView初始化的视图上
      */
     public  void initData(){
