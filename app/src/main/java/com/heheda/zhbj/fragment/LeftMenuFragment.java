@@ -1,7 +1,5 @@
 package com.heheda.zhbj.fragment;
 
-import
-        android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,18 +10,11 @@ import android.widget.TextView;
 import com.heheda.zhbj.R;
 import com.heheda.zhbj.activity.MainActivity;
 import com.heheda.zhbj.base.BaseFragment;
-import com.heheda.zhbj.base.BasePager;
-import com.heheda.zhbj.base.LeftMenuItemDetailBasePager;
-import com.heheda.zhbj.domain.newsCenterJavaBean;
-import com.heheda.zhbj.newsdetail.InterDetailpager;
-import com.heheda.zhbj.newsdetail.NewsDetailpager;
-import com.heheda.zhbj.newsdetail.PhotoDetailpager;
-import com.heheda.zhbj.newsdetail.TopicDetailpager;
+import com.heheda.zhbj.domain.NewsCenterBean;
 import com.heheda.zhbj.pager.NewsCenterPager;
 
 import org.xutils.common.util.DensityUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +24,8 @@ import java.util.List;
 public class LeftMenuFragment extends BaseFragment {
     //private TextView tv;
 
-    private List<newsCenterJavaBean.DataBean> leftdatas;
+//    private List<newsCenterJavaBean.DataBean> leftdatas;
+    private List<NewsCenterBean.newsData> leftdatas;
 
 
     private ListView listView;
@@ -43,11 +35,11 @@ public class LeftMenuFragment extends BaseFragment {
 
     private int lastPosition=0;
 
-    public List<newsCenterJavaBean.DataBean> getLeftdatas() {
+    public List<NewsCenterBean.newsData>  getLeftdatas() {
         return leftdatas;
     }
 
-    public void setLeftdatas(List<newsCenterJavaBean.DataBean> leftdatas) {
+    public void setLeftdatas(List<NewsCenterBean.newsData> leftdatas) {
         this.leftdatas = leftdatas;
 
 

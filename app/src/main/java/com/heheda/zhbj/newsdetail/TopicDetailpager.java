@@ -37,7 +37,7 @@ public class TopicDetailpager extends LeftMenuItemDetailBasePager {
     @Override
     public void initData() {
         super.initData();
-        textView.setText("主题详情界面");
+        textView.setText("专题详情界面");
 
     }
 }

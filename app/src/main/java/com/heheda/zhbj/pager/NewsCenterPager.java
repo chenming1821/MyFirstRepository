@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.heheda.zhbj.activity.MainActivity;
 import com.heheda.zhbj.base.BasePager;
 import com.heheda.zhbj.base.LeftMenuItemDetailBasePager;
-import com.heheda.zhbj.domain.newsCenterJavaBean;
+import com.heheda.zhbj.domain.NewsCenterBean;
 import com.heheda.zhbj.fragment.LeftMenuFragment;
 import com.heheda.zhbj.newsdetail.InterDetailpager;
 import com.heheda.zhbj.newsdetail.NewsDetailpager;
@@ -19,6 +19,9 @@ import com.heheda.zhbj.newsdetail.TopicDetailpager;
 import com.heheda.zhbj.utils.LogUtil;
 import com.heheda.zhbj.utils.constans;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -36,6 +39,7 @@ public class NewsCenterPager extends BasePager {
 
     private List<LeftMenuItemDetailBasePager> detailPagers;
 
+
     public NewsCenterPager(Context context) {
         super(context);
 
@@ -44,7 +48,6 @@ public class NewsCenterPager extends BasePager {
     @Override
     public void initData() {
         super.initData();
-
 
 
         //1.设置标题
@@ -67,7 +70,7 @@ public class NewsCenterPager extends BasePager {
         ibtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity mainActivity=(MainActivity) context;
+                MainActivity mainActivity = (MainActivity) context;
                 mainActivity.getSlidingMenu().toggle(); //
             }
         });
@@ -125,8 +128,9 @@ public class NewsCenterPager extends BasePager {
     private void processjson(String result) {
 
         //解析json 为javabean
-        newsCenterJavaBean newsCenterBean = parserjson(result);
+        //newsCenterJavaBean newsCenterBean = parserjson(result);
 
+        NewsCenterBean newsCenterBean2 = parserjson2(result);
 
         //给左侧菜单传递数据
         MainActivity mainActivity = (MainActivity) this.context;
@@ -139,21 +143,131 @@ public class NewsCenterPager extends BasePager {
         detailPagers.add(new InterDetailpager(context));
 
         //
-         data =   newsCenterBean.getData();
+        data = newsCenterBean2.getData();
         leftMenuFragment.setLeftdatas(data);
 
 
     }
-    private List<newsCenterJavaBean.DataBean> data;
+
+    // private List<newsCenterJavaBean.DataBean> data;
+    private List<NewsCenterBean.newsData> data;
+
     /**
      * 利用Gson解析json为Javabean
      *
      * @param result
      * @return
      */
-    private newsCenterJavaBean parserjson(String result) {
+    private NewsCenterBean parserjson(String result) {
 
-        return new Gson().fromJson(result, newsCenterJavaBean.class);
+        return new Gson().fromJson(result, NewsCenterBean.class);
+    }
+
+
+    /**
+     * 手动解析json 、即利用jsonobject解析json
+     *
+     * @param result
+     * @return
+     */
+    private NewsCenterBean parserjson2(String result) {
+
+        NewsCenterBean bean = new NewsCenterBean();
+
+        try {
+            JSONObject object = new JSONObject(result);
+
+            int retcode = object.optInt("retcode");
+            bean.setRetcode(retcode);
+
+            JSONArray extend = object.optJSONArray("extend");
+
+
+            if (extend != null && extend.length() > 0) {
+                List<Integer> extendlist = new ArrayList<>();
+                for (int k = 0; k < extend.length(); k++) {
+
+
+                    extendlist.add((Integer)extend.get(k));
+
+                }
+                bean.setExtend(extendlist);
+            }
+
+
+            JSONArray data = object.optJSONArray("data");
+
+
+            if (data != null && data.length() > 0) {
+                List<NewsCenterBean.newsData> newsBeanlist = new ArrayList<>();
+                bean.setData(newsBeanlist);
+                for (int i = 0; i < data.length(); i++) {
+                    NewsCenterBean.newsData newsDatabean = new NewsCenterBean.newsData();
+
+                    newsBeanlist.add(newsDatabean);
+
+                    JSONObject objdata = (JSONObject) data.get(i);
+
+                    int id = objdata.optInt("id");
+                    newsDatabean.setId(id);
+
+                    int type = objdata.optInt("type");
+                    newsDatabean.setType(type);
+
+
+                    String title = objdata.optString("title");
+                    newsDatabean.setTitle(title);
+
+                    String url12 = objdata.optString("url");
+                    newsDatabean.setUrl(url12);
+                    String url1 = objdata.optString("url1");
+                    newsDatabean.setUrl1(url1);
+                    String dayurl = objdata.optString("dayurl");
+                    newsDatabean.setDayurl(dayurl);
+                    String excurl = objdata.optString("excurl");
+                    newsDatabean.setExcurl(excurl);
+                    String weekurl = objdata.optString("weekurl");
+                    newsDatabean.setWeekurl(weekurl);
+
+                    JSONArray children = objdata.optJSONArray("children");
+
+
+                    if (children != null && children.length() > 0) {
+                        List<NewsCenterBean.newsData.DataChildren> childrens = new ArrayList<>();
+                        newsDatabean.setChildren(childrens);
+
+                        for (int j = 0; j < children.length(); j++) {
+
+                            JSONObject childobj = (JSONObject) children.get(j);
+                            NewsCenterBean.newsData.DataChildren child = new NewsCenterBean.newsData.DataChildren();
+                            childrens.add(child);
+
+                            int id1 = childobj.optInt("id");
+                            child.setId(id1);
+
+                            int type1 = childobj.optInt("type");
+                            child.setType(type1);
+
+                            String title1 = childobj.optString("title");
+                            child.setTitle(title1);
+
+                            String url = childobj.optString("url");
+                            child.setUrl(url);
+
+
+                        }
+                    }
+                }
+
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return bean;
     }
 
     public void switchPager(int position) {
@@ -163,7 +277,7 @@ public class NewsCenterPager extends BasePager {
         fl_content.removeAllViews();
         //添加 子页面详情
         LeftMenuItemDetailBasePager currentDetailpager = detailPagers.get(position);
-        View view=currentDetailpager.rootview; //
+        View view = currentDetailpager.rootview; //
         currentDetailpager.initData(); //给上面的view填充数据，让其显示出样子
 
         fl_content.addView(view);
