@@ -2,6 +2,7 @@ package com.heheda.zhbj.pager;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.heheda.zhbj.newsdetail.InterDetailpager;
 import com.heheda.zhbj.newsdetail.NewsDetailpager;
 import com.heheda.zhbj.newsdetail.PhotoDetailpager;
 import com.heheda.zhbj.newsdetail.TopicDetailpager;
+import com.heheda.zhbj.utils.CacheUtils;
 import com.heheda.zhbj.utils.LogUtil;
 import com.heheda.zhbj.utils.constans;
 
@@ -75,6 +77,13 @@ public class NewsCenterPager extends BasePager {
             }
         });
 
+        // 从缓存中读取数据
+        String newscache = CacheUtils.getNewsCenterCatche(context, constans.newsUri);
+
+        if (!TextUtils.isEmpty(newscache)) {
+           processjson(newscache);
+        }
+
         //联网请求数据
         getDataFromNet();
 
@@ -93,6 +102,8 @@ public class NewsCenterPager extends BasePager {
             @Override
             public void onSuccess(String result) {
                 LogUtil.e("xutils" + result);
+                //做缓存处理
+                CacheUtils.saveNewsCache(context,constans.newsUri,result);
 
                 // 请求成功后 ，需要解析json
                 processjson(result);
@@ -120,30 +131,29 @@ public class NewsCenterPager extends BasePager {
 
 
     /**
-     * 解析并显示数据
-     *
+     * 解析json并传递和显示解析后的数据
      * @param result
      * @return
      */
     private void processjson(String result) {
 
-        //解析json 为javabean
-        //newsCenterJavaBean newsCenterBean = parserjson(result);
-
+        //调用手动解析json方法
         NewsCenterBean newsCenterBean2 = parserjson2(result);
 
         //给左侧菜单传递数据
         MainActivity mainActivity = (MainActivity) this.context;
         LeftMenuFragment leftMenuFragment = mainActivity.getleftMenuFragment();
+        //
+        data = newsCenterBean2.getData();
 
-        detailPagers = new ArrayList<>();  //初始化详情页面
-        detailPagers.add(new NewsDetailpager(context));
+        //初始化详情页面
+        detailPagers = new ArrayList<>();
+        detailPagers.add(new NewsDetailpager(context,data.get(0)));
         detailPagers.add(new TopicDetailpager(context));
         detailPagers.add(new PhotoDetailpager(context));
         detailPagers.add(new InterDetailpager(context));
 
-        //
-        data = newsCenterBean2.getData();
+
         leftMenuFragment.setLeftdatas(data);
 
 
@@ -188,7 +198,7 @@ public class NewsCenterPager extends BasePager {
                 for (int k = 0; k < extend.length(); k++) {
 
 
-                    extendlist.add((Integer)extend.get(k));
+                    extendlist.add((Integer) extend.get(k));
 
                 }
                 bean.setExtend(extendlist);

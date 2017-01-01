@@ -31,4 +31,16 @@ public class CacheUtils {
     }
 
 
+    public static String getNewsCenterCatche(Context context, String key) {
+        SharedPreferences sp = context.getSharedPreferences("zhbj", Context.MODE_PRIVATE);
+
+
+        return sp.getString(key, "");
+    }
+
+    public static void saveNewsCache(Context context, String key, String result) {
+        SharedPreferences sp = context.getSharedPreferences("zhbj", Context.MODE_PRIVATE);
+
+        sp.edit().putString(key, result).commit();
+    }
 }
